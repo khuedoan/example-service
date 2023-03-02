@@ -1,10 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/ServiceWeaver/weaver"
 )
 
 const (
@@ -20,7 +24,18 @@ func version(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	fmt.Printf("Server started at %s\n", addr)
+	root := weaver.Init(context.Background())
+
+	opts := weaver.ListenerOptions{
+		LocalAddress: addr,
+	}
+
+	lis, err := root.Listener("example", opts)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("example listener available on %v\n", lis)
+
 	http.HandleFunc("/", version)
-	http.ListenAndServe(addr, nil)
+	http.Serve(lis, nil)
 }
