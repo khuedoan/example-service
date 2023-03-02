@@ -16,7 +16,11 @@ const (
 	appVersion = "v1.0.0"
 )
 
-func version(w http.ResponseWriter, req *http.Request) {
+func hello(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello, %s!\n", r.URL.Query().Get("name"))
+}
+
+func info(w http.ResponseWriter, r *http.Request) {
 	hostname, _ := os.Hostname()
 	fmt.Fprintf(w, "App version: %s\n", appVersion)
 	fmt.Fprintf(w, "Hostname: %s\n", hostname)
@@ -36,6 +40,7 @@ func main() {
 	}
 	fmt.Printf("example listener available on %v\n", lis)
 
-	http.HandleFunc("/", version)
+	http.HandleFunc("/hello", hello)
+	http.HandleFunc("/info", info)
 	http.Serve(lis, nil)
 }
