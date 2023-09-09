@@ -40,7 +40,8 @@ func main() {
 	}
 	fmt.Printf("example listener available on %v\n", lis)
 
-	http.HandleFunc("/hello", hello)
+	http.HandleFunc("/", info)
 	http.HandleFunc("/info", info)
+	http.HandleFunc("/hello", hello)
 	http.Serve(lis, nil)
 }
