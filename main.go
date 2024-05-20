@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	addr       = ":8080"
-	appVersion = "v1.0.0"
+	defaultPort = "8080"
+	appVersion  = "v1.0.0"
 )
 
 func hello(w http.ResponseWriter, r *http.Request) {
@@ -28,10 +28,16 @@ func info(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	port := defaultPort
+
+	if runtimePort := os.Getenv("PORT"); runtimePort != "" {
+		port = runtimePort
+	}
+
 	root := weaver.Init(context.Background())
 
 	opts := weaver.ListenerOptions{
-		LocalAddress: addr,
+		LocalAddress: fmt.Sprintf(":%s", port),
 	}
 
 	lis, err := root.Listener("example", opts)
